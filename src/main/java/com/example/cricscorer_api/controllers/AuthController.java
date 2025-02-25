@@ -7,13 +7,14 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.cricscorer_api.dto.LoginRequest;
 import com.example.cricscorer_api.dto.SignupRequest;
+import com.example.cricscorer_api.services.AuthService;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
  @Autowired
- private com.example.cricscorer_api.security.authService authService;
+ private AuthService authService;
 
  @PostMapping("/signup")
  public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) {

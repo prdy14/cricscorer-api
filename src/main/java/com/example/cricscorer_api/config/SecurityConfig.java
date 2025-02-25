@@ -26,11 +26,8 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig {
 
+  @Autowired
   private JwtAuthenticationFilter jwtAuthenticationFilter;
-
-  SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
-    this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-  }
 
   @Bean
   public PasswordEncoder passwordEncoder() {
@@ -60,8 +57,7 @@ public class SecurityConfig {
             .requestMatchers("/api/auth/**").permitAll()
             .requestMatchers("/api/applications/**").authenticated()
             .requestMatchers("/api/files/**").authenticated()
-            .requestMatchers("/api/job-search/**").authenticated()
-            .anyRequest().authenticated())
+            .requestMatchers("/api/job-search/**").authenticated())
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();

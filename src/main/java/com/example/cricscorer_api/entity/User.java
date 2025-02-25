@@ -4,20 +4,25 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
-@Table(name = "users", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "username"),
-    @UniqueConstraint(columnNames = "email")
-})
+@Table(name = "users")
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class User {
+
+  public User(String username2, String email2, String encode) {
+    this.username = username2;
+    this.email = email2;
+    this.password = encode;
+    this.createdAt = LocalDateTime.now();
+  }
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,8 +46,5 @@ public class User {
 
   @Column(name = "last_login")
   private LocalDateTime lastLogin;
-
-  @Enumerated()
-  private Set<Authorities> authorities;
 
 }
