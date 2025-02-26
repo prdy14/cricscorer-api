@@ -55,6 +55,7 @@ public class SecurityConfig {
         .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint()))
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/auth/**").permitAll()
+            .requestMatchers("/api/teams/**").permitAll()
             .requestMatchers("/api/applications/**").authenticated()
             .requestMatchers("/api/files/**").authenticated()
             .requestMatchers("/api/job-search/**").authenticated())

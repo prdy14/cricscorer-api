@@ -9,12 +9,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
-@Table(name = "users")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "users")
 public class User {
 
   public User(String username2, String email2, String encode) {
@@ -26,7 +27,8 @@ public class User {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @Column(name = "user_id")
+  private int userId;
 
   @NotBlank
   @Size(max = 50)
@@ -46,5 +48,20 @@ public class User {
 
   @Column(name = "last_login")
   private LocalDateTime lastLogin;
+
+  private int matchesPlayed;
+
+  private int inningsPlayed;
+
+  private int runs;
+
+  private int overs;
+
+  private int wickets;
+
+  private int economy;
+
+  @ManyToMany(mappedBy = "players", cascade = CascadeType.ALL)
+  private Set<Team> teams;
 
 }

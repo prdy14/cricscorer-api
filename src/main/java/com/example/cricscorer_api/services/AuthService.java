@@ -22,72 +22,72 @@ import java.util.Map;
 @Service
 public class AuthService {
 
- @Autowired
- private UserRepository userRepository;
+  @Autowired
+  private UserRepository userRepository;
 
- @Autowired
- private PasswordEncoder passwordEncoder;
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
- @Autowired
- private AuthenticationManager authenticationManager;
+  @Autowired
+  private AuthenticationManager authenticationManager;
 
- @Autowired
- private JwtUtils jwtUtils;
+  @Autowired
+  private JwtUtils jwtUtils;
 
- public ResponseEntity<?> registerUser(SignupRequest signupRequest) {
-  // Check if username exists
-  if (userRepository.existsByUsername(signupRequest.getUsername())) {
-   return ResponseEntity
-     .badRequest()
-     .body("Error: Username is already taken!");
+  public ResponseEntity<?> registerUser(SignupRequest signupRequest) {
+    // Check if username exists
+    if (userRepository.existsByUsername(signupRequest.getUsername())) {
+      return ResponseEntity
+          .badRequest()
+          .body("Error: Username is already taken!");
+    }
+
+    // Check if email exists
+    if (userRepository.existsByEmail(signupRequest.getEmail())) {
+      return ResponseEntity
+          .badRequest()
+          .body("Error: Email is already in use!");
+    }
+
+    // Create new user
+    User user = new User(
+        signupRequest.getUsername(),
+        signupRequest.getEmail(),
+        passwordEncoder.encode(signupRequest.getPassword()));
+
+    userRepository.save(user);
+
+    return ResponseEntity.ok("User registered successfully!");
   }
 
-  // Check if email exists
-  if (userRepository.existsByEmail(signupRequest.getEmail())) {
-   return ResponseEntity
-     .badRequest()
-     .body("Error: Email is already in use!");
+  public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
+    System.out.println(loginRequest);
+    try {
+
+      Authentication authentication = authenticationManager.authenticate(
+          new UsernamePasswordAuthenticationToken(
+              loginRequest.getEmail(),
+              loginRequest.getPassword()));
+      System.out.println(loginRequest.getPassword());
+
+      SecurityContextHolder.getContext().setAuthentication(authentication);
+      String jwt = jwtUtils.generateJwtToken(authentication);
+
+      // Update last login
+      User user = userRepository.findByEmail(loginRequest.getEmail())
+          .orElseThrow(() -> new RuntimeException("User not found"));
+      user.setLastLogin(LocalDateTime.now());
+      userRepository.save(user);
+
+      // Prepare response
+      Map<String, String> response = new HashMap<>();
+      response.put("token", jwt);
+      response.put("username", loginRequest.getEmail());
+
+      return ResponseEntity.ok(response);
+    } catch (Exception e) {
+      System.out.println(e);
+      return ResponseEntity.badRequest().body("Invalid username or password");
+    }
   }
-
-  // Create new user
-  User user = new User(
-    signupRequest.getUsername(),
-    signupRequest.getEmail(),
-    passwordEncoder.encode(signupRequest.getPassword()));
-
-  userRepository.save(user);
-
-  return ResponseEntity.ok("User registered successfully!");
- }
-
- public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
-  System.out.println(loginRequest);
-  try {
-
-   Authentication authentication = authenticationManager.authenticate(
-     new UsernamePasswordAuthenticationToken(
-       loginRequest.getUsername(),
-       loginRequest.getPassword()));
-   System.out.println(loginRequest.getPassword());
-
-   SecurityContextHolder.getContext().setAuthentication(authentication);
-   String jwt = jwtUtils.generateJwtToken(authentication);
-
-   // Update last login
-   User user = userRepository.findByUsername(loginRequest.getUsername())
-     .orElseThrow(() -> new RuntimeException("User not found"));
-   user.setLastLogin(LocalDateTime.now());
-   userRepository.save(user);
-
-   // Prepare response
-   Map<String, String> response = new HashMap<>();
-   response.put("token", jwt);
-   response.put("username", loginRequest.getUsername());
-
-   return ResponseEntity.ok(response);
-  } catch (Exception e) {
-   System.out.println(e);
-   return ResponseEntity.badRequest().body("Invalid username or password");
-  }
- }
 }
