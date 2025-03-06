@@ -7,7 +7,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class TeamRequest {
- private String teamName;
+public class UpdateTeamRequest {
  private Set<Long> playersId;
 }

@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
 @Data
@@ -28,7 +27,7 @@ public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "user_id")
-  private int userId;
+  private Long userId;
 
   @NotBlank
   @Size(max = 50)
@@ -48,20 +47,5 @@ public class User {
 
   @Column(name = "last_login")
   private LocalDateTime lastLogin;
-
-  private int matchesPlayed;
-
-  private int inningsPlayed;
-
-  private int runs;
-
-  private int overs;
-
-  private int wickets;
-
-  private int economy;
-
-  @ManyToMany(mappedBy = "players", cascade = CascadeType.ALL)
-  private Set<Team> teams;
 
 }

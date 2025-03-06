@@ -11,12 +11,15 @@ import org.springframework.stereotype.Service;
 
 import com.example.cricscorer_api.dto.LoginRequest;
 import com.example.cricscorer_api.dto.SignupRequest;
+import com.example.cricscorer_api.entity.Player;
 import com.example.cricscorer_api.entity.User;
+import com.example.cricscorer_api.repository.PlayerRepo;
 import com.example.cricscorer_api.repository.UserRepository;
 import com.example.cricscorer_api.security.JwtUtils;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -30,6 +33,9 @@ public class AuthService {
 
   @Autowired
   private AuthenticationManager authenticationManager;
+
+  @Autowired
+  private PlayerRepo playerRepo;
 
   @Autowired
   private JwtUtils jwtUtils;
@@ -57,11 +63,13 @@ public class AuthService {
 
     userRepository.save(user);
 
+    Player player = Player.builder().id(user.getUserId()).build();
+    playerRepo.save(player);
+
     return ResponseEntity.ok("User registered successfully!");
   }
 
   public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
-    System.out.println(loginRequest);
     try {
 
       Authentication authentication = authenticationManager.authenticate(
@@ -75,6 +83,7 @@ public class AuthService {
 
       // Update last login
       User user = userRepository.findByEmail(loginRequest.getEmail())
+
           .orElseThrow(() -> new RuntimeException("User not found"));
       user.setLastLogin(LocalDateTime.now());
       userRepository.save(user);
@@ -89,5 +98,10 @@ public class AuthService {
       System.out.println(e);
       return ResponseEntity.badRequest().body("Invalid username or password");
     }
+  }
+
+  public List<User> getAllUsers() {
+    List<User> users = userRepository.findAll();
+    return users;
   }
 }

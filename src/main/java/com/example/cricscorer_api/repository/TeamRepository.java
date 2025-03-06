@@ -9,8 +9,10 @@ import org.springframework.stereotype.Repository;
 import com.example.cricscorer_api.entity.Team;
 
 @Repository
-public interface TeamRepository extends JpaRepository<Team, Integer> {
+public interface TeamRepository extends JpaRepository<Team, Long> {
 
  Optional<Team> findByTeamName(String teamName);
+
+ Optional<Team> findByTeamId(long teamId);
 
 }

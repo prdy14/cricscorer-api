@@ -1,52 +1,56 @@
 package com.example.cricscorer_api.entity;
 
+import java.util.List;
 import java.util.Set;
 
-import org.springframework.data.mongodb.repository.CountQuery;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Builder
 @Table(name = "team")
 public class Team {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "team_id")
-  private int teamId;
+  private Long teamId;
 
   @NotNull
   private String teamName;
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(name = "team_players", joinColumns = {
       @JoinColumn(name = "team_id")
   }, inverseJoinColumns = {
-      @JoinColumn(name = "user_id")
+      @JoinColumn(name = "player_id")
   })
-  private Set<User> players;
-
-  public void addUser(User user) {
-    this.players.add(user);
-  }
+  @JsonIgnore
+  private Set<Player> players;
 
   private int matchesPlayes;
 
@@ -55,5 +59,13 @@ public class Team {
   private int lost;
 
   private int draw;
+
+  @ManyToMany(mappedBy = "teams", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JsonIgnore
+  private List<Match> Matches;
+
+  public void addPlayer(Player player) {
+    this.players.add(player);
+  }
 
 }

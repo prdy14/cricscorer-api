@@ -20,7 +20,6 @@ import java.io.IOException;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-  private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
   @Autowired
   private JwtUtils jwtUtils;
@@ -36,12 +35,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
     try {
       String jwt = parseJwt(request);
-      logger.debug("JWT Token: {}", jwt);
+
       System.out.println(jwt);
 
       if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
         String username = jwtUtils.getUsernameFromJwtToken(jwt);
-        logger.debug("Username from token: {}", username);
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
@@ -53,10 +51,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        logger.debug("Authentication set for user: {}", username);
+
       }
     } catch (Exception e) {
-      logger.error("Cannot set user authentication", e);
+
     }
 
     filterChain.doFilter(request, response);
@@ -64,7 +62,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private String parseJwt(HttpServletRequest request) {
     String headerAuth = request.getHeader("Authorization");
-    logger.debug("Authorization Header: {}", headerAuth);
 
     if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
       return headerAuth.substring(7);
