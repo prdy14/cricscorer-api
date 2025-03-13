@@ -9,4 +9,8 @@ import lombok.Setter;
 @Setter
 public class CreateMatchRequest {
  private List<TeamResponse> teams;
+ private String venue;
+ private long tossWon;
+ private int overs;
+ private String optTo;
 }

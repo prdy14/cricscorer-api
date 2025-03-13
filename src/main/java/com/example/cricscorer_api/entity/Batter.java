@@ -23,6 +23,11 @@ public class Batter {
  @JsonIgnore
  private Inning inning;
 
+ @ManyToOne(fetch = FetchType.LAZY)
+ @JoinColumn(name = "player_id", referencedColumnName = "player_id")
+ @JsonIgnore
+ private Player player;
+
  private String name;
  private int runs;
  private int balls;

@@ -1,7 +1,6 @@
 package com.example.cricscorer_api.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,6 +22,11 @@ public class Bowler {
  @JoinColumn(name = "inning_id", referencedColumnName = "id")
  @JsonIgnore
  private Inning inning;
+
+ @ManyToOne(fetch = FetchType.LAZY)
+ @JoinColumn(name = "player_id", referencedColumnName = "player_id")
+ @JsonIgnore
+ private Player player;
 
  private String name;
  private int overs;

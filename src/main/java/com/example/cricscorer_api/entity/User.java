@@ -9,6 +9,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Data
@@ -21,6 +25,12 @@ public class User {
     this.username = username2;
     this.email = email2;
     this.password = encode;
+    this.createdAt = LocalDateTime.now();
+  }
+
+  public User(String username2, String email2) {
+    this.username = username2;
+    this.email = email2;
     this.createdAt = LocalDateTime.now();
   }
 
@@ -38,7 +48,6 @@ public class User {
   @Email
   private String email;
 
-  @NotBlank
   @Size(max = 120)
   private String password;
 

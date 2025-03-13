@@ -9,8 +9,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.cricscorer_api.dto.AddPlayerDto;
 import com.example.cricscorer_api.dto.LoginRequest;
 import com.example.cricscorer_api.dto.SignupRequest;
+import com.example.cricscorer_api.dto.UserInfo;
+import com.example.cricscorer_api.dto.ValidTokenRes;
 import com.example.cricscorer_api.entity.Player;
 import com.example.cricscorer_api.entity.User;
 import com.example.cricscorer_api.repository.PlayerRepo;
@@ -63,10 +66,22 @@ public class AuthService {
 
     userRepository.save(user);
 
-    Player player = Player.builder().id(user.getUserId()).build();
+    Player player = Player.builder().id(user.getUserId()).name(user.getUsername()).build();
     playerRepo.save(player);
+    System.out.println(player.getBatting());
 
     return ResponseEntity.ok("User registered successfully!");
+  }
+
+  public ResponseEntity<?> addPlayer(AddPlayerDto addPlayerDto) {
+    User user = new User(addPlayerDto.getUsername(), addPlayerDto.getEmail());
+    System.out.println(user);
+    userRepository.save(user);
+    Player player = Player.builder().id(user.getUserId()).name(user.getUsername()).build();
+    playerRepo.save(player);
+
+    return ResponseEntity.ok().body(new UserInfo(user));
+
   }
 
   public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
@@ -98,6 +113,23 @@ public class AuthService {
       System.out.println(e);
       return ResponseEntity.badRequest().body("Invalid username or password");
     }
+  }
+
+  public ResponseEntity<?> validateToken(String token) {
+    String user = jwtUtils.getUsernameFromJwtToken(token);
+    ValidTokenRes validTokenRes = new ValidTokenRes(user);
+    if (user != null) {
+      return ResponseEntity.ok(validTokenRes);
+    }
+    return ResponseEntity.badRequest().body(validTokenRes);
+  }
+
+  public ResponseEntity<?> findByEmail(String eamil) {
+    User user = userRepository.findByEmail(eamil).orElse(null);
+    if (user != null) {
+      return ResponseEntity.ok().body(new UserInfo(user));
+    }
+    return ResponseEntity.ok().body(null);
   }
 
   public List<User> getAllUsers() {

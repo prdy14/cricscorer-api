@@ -18,12 +18,13 @@ import lombok.Setter;
 public class TeamResponse {
  private long id;
  private String name;
- private List<Long> playersId;
+ private String location;
 
  public TeamResponse(Team team) {
   this.id = team.getTeamId();
   this.name = team.getTeamName();
-  this.playersId = team.getPlayers().stream().map(Player::getId).collect(Collectors.toList());
+
+  this.location = team.getLocation();
  }
 
  public TeamResponse(int id) {

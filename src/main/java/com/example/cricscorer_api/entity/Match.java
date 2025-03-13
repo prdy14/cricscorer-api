@@ -41,6 +41,10 @@ public class Match {
   @Enumerated(EnumType.STRING)
   private Status status;
   private String result;
+  private int overs;
+  private long tossWon;
+
+  private String optTO;
 
   @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
   @JsonIgnore

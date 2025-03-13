@@ -21,6 +21,7 @@ public class JwtUtils {
 
   public String generateJwtToken(Authentication authentication) {
     UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
+    System.out.println(userPrincipal.getUsername());
 
     return Jwts.builder()
         .setSubject(userPrincipal.getUsername())
@@ -49,8 +50,23 @@ public class JwtUtils {
       Jwts.parserBuilder()
           .setSigningKey(getSigningKey())
           .build()
-          .parseClaimsJws(authToken);
+          .parseClaimsJws(authToken)
+          .getBody();
       return true;
+
+    } catch (JwtException e) {
+      return false;
+    }
+  }
+
+  public boolean validateToken(String authToken, String email) {
+    try {
+      return Jwts.parserBuilder()
+          .setSigningKey(getSigningKey())
+          .build()
+          .parseClaimsJws(authToken)
+          .getBody().getSubject().equals(email);
+
     } catch (JwtException e) {
       return false;
     }

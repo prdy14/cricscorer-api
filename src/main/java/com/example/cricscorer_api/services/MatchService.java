@@ -45,6 +45,8 @@ public class MatchService {
         .collect(Collectors.toList());
 
     Match match = Match.builder().date(new Date()).status(Status.Upcoming).teams(teams).innings(new ArrayList<Inning>())
+        .tossWon(matchRequest.getTossWon()).overs(matchRequest.getOvers()).venue(matchRequest.getVenue())
+        .optTO(matchRequest.getOptTo())
         .build();
     matchRepository.save(match);
 
@@ -57,8 +59,9 @@ public class MatchService {
 
     match.getInnings().add(inning2);
     match.getInnings().add(inning1);
+    matchRepository.save(match);
+    return ResponseEntity.ok(match.getTeams().stream().map(Team::getPlayers).collect(Collectors.toList()));
 
-    return ResponseEntity.ok(match);
   }
 
   public ResponseEntity<?> deleteMatch(Long id) {

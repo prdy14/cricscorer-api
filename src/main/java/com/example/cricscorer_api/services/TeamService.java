@@ -9,9 +9,10 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.stereotype.Service;
 
+import com.example.cricscorer_api.dto.TeamResponse;
 import com.example.cricscorer_api.entity.Player;
 import com.example.cricscorer_api.entity.Team;
-
+import com.example.cricscorer_api.entity.User;
 import com.example.cricscorer_api.repository.PlayerRepo;
 import com.example.cricscorer_api.repository.TeamRepository;
 
@@ -28,11 +29,12 @@ public class TeamService {
   private PlayerRepo playerRepo;
 
   @Transactional
-  public Team addTeam(String teamName, Set<Long> playersId) {
+  public TeamResponse addTeam(String teamName, Set<Long> playersId, String location) {
     // Fetch or create a team
     Team team = new Team();
     team.setTeamName(teamName);
     team.setPlayers(new HashSet<>());
+    team.setLocation(location);
 
     Set<Player> existingUsers = new HashSet<>();
 
@@ -47,7 +49,9 @@ public class TeamService {
       ;
     }
 
-    return teamRepository.save(team);
+    teamRepository.save(team);
+    return new TeamResponse(team);
+
   }
 
   public ResponseEntity<?> deleteTeam(long id) {
@@ -84,8 +88,29 @@ public class TeamService {
     }
   }
 
+  public ResponseEntity<?> addPlayerToTeam(long teamId, long playerId) {
+    try {
+      Team team = teamRepository.findByTeamId(teamId)
+          .orElseThrow(() -> new RuntimeException("Team not found"));
+
+      Player player = playerRepo.findById(playerId).orElse(null);
+
+      if (player != null) {
+        team.getPlayers().add(player);
+      }
+
+      teamRepository.save(team);
+      return ResponseEntity.ok().body(
+          "player added");
+    } catch (Exception ex) {
+      System.out.println(ex);
+      return ResponseEntity.badRequest().body("error while adding player");
+    }
+  }
+
   public ResponseEntity<?> getTeams() {
     List<Team> teams = teamRepository.findAll();
+    System.out.println(teams);
     return ResponseEntity.ok().body(teams);
   }
 }

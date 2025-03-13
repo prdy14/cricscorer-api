@@ -10,4 +10,5 @@ import lombok.Data;
 public class TeamRequest {
  private String teamName;
  private Set<Long> playersId;
+ private String location;
 }

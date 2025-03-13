@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.cricscorer_api.dto.TeamRequest;
+import com.example.cricscorer_api.dto.TeamResponse;
 import com.example.cricscorer_api.dto.UpdateTeamRequest;
 import com.example.cricscorer_api.entity.Team;
 import com.example.cricscorer_api.services.TeamService;
@@ -25,9 +26,9 @@ public class TeamController {
  private TeamService teamService;
 
  @PostMapping("/createteam")
- public Team postMethodName(@RequestBody TeamRequest teamRequest) {
+ public TeamResponse createTeam(@RequestBody TeamRequest teamRequest) {
   System.out.println(teamRequest);
-  return teamService.addTeam(teamRequest.getTeamName(), teamRequest.getPlayersId());
+  return teamService.addTeam(teamRequest.getTeamName(), teamRequest.getPlayersId(), teamRequest.getLocation());
  }
 
  @DeleteMapping("/deleteTeam/{id}")
@@ -39,6 +40,12 @@ public class TeamController {
  public ResponseEntity<?> updateTeam(@PathVariable int id, @RequestBody UpdateTeamRequest updateTeamRequest) {
 
   return teamService.updateTeam(id, updateTeamRequest.getPlayersId());
+ }
+
+ @PutMapping("/addPlayer/{id}/{pId}")
+ public ResponseEntity<?> putMethodName(@PathVariable("id") long id, @PathVariable("pId") long pId) {
+  return teamService.addPlayerToTeam(id, pId);
+
  }
 
  @GetMapping("/teams")
