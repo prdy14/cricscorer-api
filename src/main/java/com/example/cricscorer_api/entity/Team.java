@@ -49,7 +49,6 @@ public class Team {
   }, inverseJoinColumns = {
       @JoinColumn(name = "player_id")
   })
-  @JsonIgnore
   private Set<Player> players;
 
   private int matchesPlayes;

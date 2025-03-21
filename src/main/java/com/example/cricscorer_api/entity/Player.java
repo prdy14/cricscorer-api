@@ -49,12 +49,4 @@ public class Player {
  @JsonIgnore
  private Set<Team> teams;
 
- @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
- @JsonIgnore
- private List<Batter> batting;
-
- @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
- @JsonIgnore
- private List<Bowler> bowling;
-
 }

@@ -1,39 +1,25 @@
 package com.example.cricscorer_api.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "batters")
+@Builder
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class Batter {
-
- @Id
- @GeneratedValue(strategy = GenerationType.IDENTITY)
- private Long id;
-
- @ManyToOne(fetch = FetchType.LAZY)
- @JoinColumn(name = "inning_id", referencedColumnName = "id")
- @JsonIgnore
- private Inning inning;
-
- @ManyToOne(fetch = FetchType.LAZY)
- @JoinColumn(name = "player_id", referencedColumnName = "player_id")
- @JsonIgnore
- private Player player;
-
+@AllArgsConstructor
+class Batter {
+ private int spot;
+ private long playerId;
  private String name;
  private int runs;
  private int balls;
  private int fours;
  private int sixes;
+ private boolean out;
+ private long bowledBy;
+ private long catchBy;
+ private long runOutBy;
  private double strikeRate;
-
- // Getters & Setters
 }

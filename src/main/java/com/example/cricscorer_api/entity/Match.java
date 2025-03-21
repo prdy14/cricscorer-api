@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "matches")
@@ -46,8 +45,8 @@ public class Match {
 
   private String optTO;
 
-  @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JsonIgnore
-  private List<Inning> innings;
+  private User createdBy;
 
 }

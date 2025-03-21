@@ -68,7 +68,6 @@ public class AuthService {
 
     Player player = Player.builder().id(user.getUserId()).name(user.getUsername()).build();
     playerRepo.save(player);
-    System.out.println(player.getBatting());
 
     return ResponseEntity.ok("User registered successfully!");
   }

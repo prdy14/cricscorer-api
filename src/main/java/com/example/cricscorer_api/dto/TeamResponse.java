@@ -1,9 +1,5 @@
 package com.example.cricscorer_api.dto;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.example.cricscorer_api.entity.Player;
 import com.example.cricscorer_api.entity.Team;
 
 import lombok.AllArgsConstructor;

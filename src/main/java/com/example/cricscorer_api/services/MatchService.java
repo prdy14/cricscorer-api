@@ -1,27 +1,27 @@
 package com.example.cricscorer_api.services;
 
-import java.beans.Transient;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+
 import java.util.List;
 
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.example.cricscorer_api.dto.CreateMatchRequest;
-import com.example.cricscorer_api.entity.Batter;
-import com.example.cricscorer_api.entity.Bowler;
-import com.example.cricscorer_api.entity.Inning;
+import com.example.cricscorer_api.entity.Innings;
 import com.example.cricscorer_api.entity.Match;
 import com.example.cricscorer_api.entity.Status;
 import com.example.cricscorer_api.entity.Team;
-import com.example.cricscorer_api.repository.InningsRepo;
+import com.example.cricscorer_api.entity.User;
+import com.example.cricscorer_api.repository.Innings1Repo;
+
 import com.example.cricscorer_api.repository.MatchRepo;
 import com.example.cricscorer_api.repository.TeamRepository;
+import com.example.cricscorer_api.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -35,7 +35,10 @@ public class MatchService {
   private TeamRepository teamRepository;
 
   @Autowired
-  private InningsRepo inningsRepo;
+  private UserRepository userRepository;
+
+  @Autowired
+  private Innings1Repo innings1Repo;
 
   @Transactional
   public ResponseEntity<?> createMatch(CreateMatchRequest matchRequest) {
@@ -44,23 +47,28 @@ public class MatchService {
         .map(team -> teamRepository.findById(team.getId()).orElseThrow(() -> new RuntimeException("team not found")))
         .collect(Collectors.toList());
 
-    Match match = Match.builder().date(new Date()).status(Status.Upcoming).teams(teams).innings(new ArrayList<Inning>())
+    User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+        .orElse(null);
+
+    Match match = Match.builder().date(new Date()).status(Status.Upcoming).teams(teams)
         .tossWon(matchRequest.getTossWon()).overs(matchRequest.getOvers()).venue(matchRequest.getVenue())
-        .optTO(matchRequest.getOptTo())
+        .optTO(matchRequest.getOptTo()).createdBy(user)
         .build();
     matchRepository.save(match);
 
-    Inning inning1 = Inning.builder().batters(new ArrayList<Batter>()).bowlers(new ArrayList<Bowler>()).match(match)
-        .build();
-    Inning inning2 = Inning.builder().batters(new ArrayList<Batter>()).bowlers(new ArrayList<Bowler>()).match(match)
-        .build();
-    inningsRepo.save(inning1);
-    inningsRepo.save(inning2);
+    Innings innings1 = Innings.builder().batters(List.of()).bowlers(List.of()).battingTeamId(teams.get(0).getTeamId())
+        .bowlingTeamId(teams.get(1).getTeamId()).build();
+    Innings innings2 = Innings.builder().batters(List.of()).bowlers(List.of()).battingTeamId(teams.get(1).getTeamId())
+        .bowlingTeamId(teams.get(0).getTeamId()).build();
 
-    match.getInnings().add(inning2);
-    match.getInnings().add(inning1);
-    matchRepository.save(match);
-    return ResponseEntity.ok(match.getTeams().stream().map(Team::getPlayers).collect(Collectors.toList()));
+    if ((matchRequest.getTossWon() == teams.get(0).getTeamId() && matchRequest.getOptTo() == "Bat") || (matchRequest
+        .getTossWon() == teams.get(1).getTeamId() && matchRequest.getOptTo() == "Ball")) {
+      innings1Repo.save(innings1);
+    } else {
+      innings1Repo.save(innings2);
+    }
+
+    return ResponseEntity.ok(match);
 
   }
 
