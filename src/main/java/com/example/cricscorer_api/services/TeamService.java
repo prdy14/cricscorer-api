@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.example.cricscorer_api.dto.TeamResponse;
 import com.example.cricscorer_api.entity.Player;
 import com.example.cricscorer_api.entity.Team;
-import com.example.cricscorer_api.entity.User;
+
 import com.example.cricscorer_api.repository.PlayerRepo;
 import com.example.cricscorer_api.repository.TeamRepository;
 
@@ -29,16 +29,16 @@ public class TeamService {
   private PlayerRepo playerRepo;
 
   @Transactional
-  public TeamResponse addTeam(String teamName, Set<Long> playersId, String location) {
+  public TeamResponse addTeam(String teamName, Set<String> playersId, String location) {
     // Fetch or create a team
     Team team = new Team();
     team.setTeamName(teamName);
-    team.setPlayers(new HashSet<>());
+    team.setPlayers(List.of());
     team.setLocation(location);
 
     Set<Player> existingUsers = new HashSet<>();
 
-    for (long id : playersId) {
+    for (String id : playersId) {
       // Check if the user exists in the database
       playerRepo.findById(id).ifPresent(existingUsers::add);
     }
@@ -54,7 +54,7 @@ public class TeamService {
 
   }
 
-  public ResponseEntity<?> deleteTeam(long id) {
+  public ResponseEntity<?> deleteTeam(String id) {
     try {
       teamRepository.deleteById(id);
       return ResponseEntity.ok().body("team deleted sucessfully");
@@ -64,15 +64,15 @@ public class TeamService {
 
   }
 
-  public ResponseEntity<?> updateTeam(int id, Set<Long> playerIds) {
+  public ResponseEntity<?> updateTeam(String id, Set<String> playerIds) {
     try {
       Team team = teamRepository.findByTeamId(id)
           .orElseThrow(() -> new RuntimeException("Team not found"));
 
-      Set<Player> existingUsers = new HashSet<>();
+      List<Player> existingUsers = List.of();
 
       // Fetch only existing users from the database
-      for (long playerId : playerIds) {
+      for (String playerId : playerIds) {
         playerRepo.findById(playerId).ifPresent(existingUsers::add);
       }
 
@@ -88,7 +88,7 @@ public class TeamService {
     }
   }
 
-  public ResponseEntity<?> addPlayerToTeam(long teamId, long playerId) {
+  public ResponseEntity<?> addPlayerToTeam(String teamId, String playerId) {
     try {
       Team team = teamRepository.findByTeamId(teamId)
           .orElseThrow(() -> new RuntimeException("Team not found"));
@@ -112,5 +112,10 @@ public class TeamService {
     List<Team> teams = teamRepository.findAll();
     System.out.println(teams);
     return ResponseEntity.ok().body(teams);
+  }
+
+  public ResponseEntity<?> getTeam(String id) {
+    Team team = teamRepository.findById(id).orElse(null);
+    return ResponseEntity.ok().body(new TeamResponse(team));
   }
 }

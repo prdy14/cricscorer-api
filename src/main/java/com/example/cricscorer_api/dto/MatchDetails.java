@@ -1,12 +1,13 @@
 package com.example.cricscorer_api.dto;
 
-import java.util.Set;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
-public class UpdateTeamRequest {
- private Set<String> playersId;
+public class MatchDetails {
+ private String id;
+ private int target;
 }

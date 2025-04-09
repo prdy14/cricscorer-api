@@ -17,7 +17,7 @@ public class PlayerController {
  private PlayerService playerService;
 
  @GetMapping("/{id}")
- public Player getMethodName(@PathVariable("id") long id) {
+ public Player getMethodName(@PathVariable("id") String id) {
   return playerService.findPlayer(id);
  }
 

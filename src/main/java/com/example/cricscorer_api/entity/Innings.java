@@ -20,15 +20,20 @@ public class Innings {
 
  @Id
  private String id;
-
- private long matchId;
- private long battingTeamId;
- private long bowlingTeamId;
- private int runs;
+ private String matchId;
+ private boolean isInnings1;
+ private String battingTeamId;
+ private String bowlingTeamId;
+ private double over;
+ private int score;
  private int wickets;
- private double currentOver;
+ private boolean started;
  private boolean completed;
+
+ @DBRef
  private List<Batter> batters;
+
+ @DBRef
  private List<Bowler> bowlers;
 
  @DBRef

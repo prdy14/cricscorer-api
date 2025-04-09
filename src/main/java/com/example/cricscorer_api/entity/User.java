@@ -38,9 +38,9 @@ public class User {
   }
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.UUID)
   @Column(name = "user_id")
-  private Long userId;
+  private String userId;
 
   @NotBlank
   @Size(max = 50)

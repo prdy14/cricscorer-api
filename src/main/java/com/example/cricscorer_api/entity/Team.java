@@ -36,9 +36,9 @@ import lombok.Setter;
 public class Team {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.UUID)
   @Column(name = "team_id")
-  private Long teamId;
+  private String teamId;
 
   @NotNull
   private String teamName;
@@ -49,7 +49,7 @@ public class Team {
   }, inverseJoinColumns = {
       @JoinColumn(name = "player_id")
   })
-  private Set<Player> players;
+  private List<Player> players;
 
   private int matchesPlayes;
 

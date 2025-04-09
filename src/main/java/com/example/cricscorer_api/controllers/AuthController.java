@@ -12,10 +12,9 @@ import com.example.cricscorer_api.dto.AddPlayerDto;
 import com.example.cricscorer_api.dto.LoginRequest;
 import com.example.cricscorer_api.dto.SignupRequest;
 import com.example.cricscorer_api.dto.ValidateTokenRequest;
-import com.example.cricscorer_api.entity.Innings;
+
 import com.example.cricscorer_api.entity.User;
 import com.example.cricscorer_api.services.AuthService;
-import com.example.cricscorer_api.services.Innings1Serivce;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

@@ -1,7 +1,5 @@
 package com.example.cricscorer_api.dto;
 
-import com.example.cricscorer_api.entity.Player;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,12 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PlayerInfo {
+public class UpdateBatter {
  private String id;
- private String name;
+ private int runs;
+ private int balls;
+ private int fours;
+ private int sixes;
 
- public PlayerInfo(Player player) {
-  this.id = player.getId();
-  this.name = player.getName();
- }
 }

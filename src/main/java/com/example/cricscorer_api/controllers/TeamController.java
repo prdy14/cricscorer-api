@@ -32,18 +32,18 @@ public class TeamController {
  }
 
  @DeleteMapping("/deleteTeam/{id}")
- public ResponseEntity<?> deleteTeam(@PathVariable("id") int id) {
+ public ResponseEntity<?> deleteTeam(@PathVariable("id") String id) {
   return teamService.deleteTeam(id);
  }
 
  @PutMapping("/updateTeam/{id}")
- public ResponseEntity<?> updateTeam(@PathVariable int id, @RequestBody UpdateTeamRequest updateTeamRequest) {
+ public ResponseEntity<?> updateTeam(@PathVariable String id, @RequestBody UpdateTeamRequest updateTeamRequest) {
 
   return teamService.updateTeam(id, updateTeamRequest.getPlayersId());
  }
 
  @PutMapping("/addPlayer/{id}/{pId}")
- public ResponseEntity<?> putMethodName(@PathVariable("id") long id, @PathVariable("pId") long pId) {
+ public ResponseEntity<?> putMethodName(@PathVariable("id") String id, @PathVariable("pId") String pId) {
   return teamService.addPlayerToTeam(id, pId);
 
  }
@@ -51,6 +51,11 @@ public class TeamController {
  @GetMapping("/teams")
  public ResponseEntity<?> getAllteams() {
   return teamService.getTeams();
+ }
+
+ @GetMapping("/team/{id}")
+ public ResponseEntity<?> getTeam(@PathVariable("id") String id) {
+  return teamService.getTeam(id);
  }
 
 }

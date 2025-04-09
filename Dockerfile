@@ -1,8 +1,10 @@
-FROM maven:3-eclipse-temurin-17 AS build
+FROM maven:3.9-eclipse-temurin-21 AS build
 COPY . . 
 RUN mvn clean package -DskipTests
 
-FROM eclipse-temurin:17-alpine
-COPY --from=build /target/*.jar demo.jar
-EXPOSE 8080
+FROM eclipse-temurin:21-alpine-3.21
+COPY --from=build /target/cricscorer-api-0.0.1-SNAPSHOT.jar demo.jar
+EXPOSE 8081
 ENTRYPOINT [ "java","-jar","demo.jar"]
+
+

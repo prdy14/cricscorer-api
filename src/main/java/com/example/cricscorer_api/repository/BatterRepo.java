@@ -1,11 +1,11 @@
 package com.example.cricscorer_api.repository;
 
+import com.example.cricscorer_api.entity.Batter;
+
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.cricscorer_api.entity.Over;
-
 @Repository
-public interface OverRepo extends MongoRepository<Over, String> {
+public interface BatterRepo extends MongoRepository<Batter, String> {
 
 }

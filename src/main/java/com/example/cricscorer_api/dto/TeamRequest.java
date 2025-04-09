@@ -9,6 +9,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class TeamRequest {
  private String teamName;
- private Set<Long> playersId;
+ private Set<String> playersId;
  private String location;
 }

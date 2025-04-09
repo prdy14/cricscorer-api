@@ -74,7 +74,6 @@ public class AuthService {
 
   public ResponseEntity<?> addPlayer(AddPlayerDto addPlayerDto) {
     User user = new User(addPlayerDto.getUsername(), addPlayerDto.getEmail());
-    System.out.println(user);
     userRepository.save(user);
     Player player = Player.builder().id(user.getUserId()).name(user.getUsername()).build();
     playerRepo.save(player);
@@ -90,7 +89,6 @@ public class AuthService {
           new UsernamePasswordAuthenticationToken(
               loginRequest.getEmail(),
               loginRequest.getPassword()));
-      System.out.println(loginRequest.getPassword());
 
       SecurityContextHolder.getContext().setAuthentication(authentication);
       String jwt = jwtUtils.generateJwtToken(authentication);

@@ -27,7 +27,7 @@ public class Player {
 
  @Id
  @Column(name = "player_id")
- private long id;
+ private String id;
 
  private String name;
 

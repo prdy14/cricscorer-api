@@ -22,8 +22,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Match {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private String id;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(name = "team_matches", joinColumns = {
@@ -41,7 +41,9 @@ public class Match {
   private Status status;
   private String result;
   private int overs;
-  private long tossWon;
+  private String tossWon;
+  private int target;
+  private boolean isinnings2;
 
   private String optTO;
 

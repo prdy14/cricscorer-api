@@ -12,7 +12,7 @@ public class PlayerService {
  @Autowired
  private PlayerRepo playerRepo;
 
- public Player findPlayer(long id) {
+ public Player findPlayer(String id) {
   return playerRepo.findById(id).orElse(null);
  }
 }
