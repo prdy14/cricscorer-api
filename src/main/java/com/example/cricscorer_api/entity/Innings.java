@@ -25,7 +25,7 @@ public class Innings {
  private String battingTeamId;
  private String bowlingTeamId;
  private double over;
- private int score;
+ private int runs;
  private int wickets;
  private boolean started;
  private boolean completed;

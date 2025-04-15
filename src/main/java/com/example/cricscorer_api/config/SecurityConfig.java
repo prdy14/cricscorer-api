@@ -43,26 +43,15 @@ public class SecurityConfig {
   }
 
   @Bean
-  public AuthenticationEntryPoint authenticationEntryPoint() {
-    BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
-    entryPoint.setRealmName("cricscorer");
-    return entryPoint;
-  }
-
-  @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .csrf(csrf -> csrf.disable())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint()))
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/auth/**").permitAll()
             .requestMatchers("/api/player/**").authenticated()
             .requestMatchers("/api/teams/**").authenticated()
-            .requestMatchers("/api/matches/**").authenticated()
-            .requestMatchers("/api/applications/**").authenticated()
-            .requestMatchers("/api/files/**").authenticated()
-            .requestMatchers("/api/job-search/**").authenticated())
+            .requestMatchers("/api/matches/**").authenticated())
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
@@ -73,7 +62,7 @@ public class SecurityConfig {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration
         .setAllowedOriginPatterns(Arrays.asList("http://localhost:5173",
-            "https://vite-project-one-roan.vercel.app/", "*"));
+            "https://vite-project-one-roan.vercel.app/"));
     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
     configuration.setExposedHeaders(Arrays.asList("x-auth-token"));

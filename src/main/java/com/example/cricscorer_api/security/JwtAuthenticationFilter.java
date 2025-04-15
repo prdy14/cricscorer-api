@@ -36,11 +36,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     try {
       String jwt = parseJwt(request);
 
-      System.out.println(jwt);
-
       if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
         String username = jwtUtils.getUsernameFromJwtToken(jwt);
-        System.out.println(username);
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

@@ -13,5 +13,8 @@ public class UpdateBatter {
  private int balls;
  private int fours;
  private int sixes;
+ private boolean striker;
+ private boolean out;
+ private String bowledBy;
 
 }

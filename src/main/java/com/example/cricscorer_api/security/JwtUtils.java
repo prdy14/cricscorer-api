@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.function.Function;
 
 @Component
 public class JwtUtils {
@@ -42,6 +43,25 @@ public class JwtUtils {
         .parseClaimsJws(token)
         .getBody()
         .getSubject();
+  }
+
+  public Claims extractClaims(String token) {
+    return Jwts.parserBuilder()
+        .setSigningKey(getSigningKey())
+        .build()
+        .parseClaimsJws(token)
+        .getBody();
+  }
+
+  public String extractUserName(String token) {
+    return extractClaim(token, Claims::getSubject);
+  }
+
+  public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+
+    final Claims claims = extractClaims(token);
+    return claimsResolver.apply(claims);
+
   }
 
   public boolean validateJwtToken(String authToken) {

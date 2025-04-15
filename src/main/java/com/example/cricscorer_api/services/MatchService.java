@@ -164,9 +164,9 @@ public class MatchService {
     String teamB = teamRepository.findByTeamId(innings1.getBowlingTeamId()).get().getTeamName();
     return LiveMatchDetails.builder().id(match.getId())
         .optTo(match.getOptTO()).secondInnings(match.isIsinnings2())
-        .target(match.getTarget()).tossWon(match.getTossWon() == innings1.getBattingTeamId() ? teamA : teamB)
-        .teamB(teamB).teamA(teamA).score1(innings1.getScore() + "-" + innings1.getWickets())
-        .score2(innings2.getScore() + "-" + innings2.getWickets()).venue(match.getVenue()).build();
+        .target(match.getTarget()).tossWon(match.getTossWon().equals(innings1.getBattingTeamId()) ? teamA : teamB)
+        .teamB(teamB).teamA(teamA).score1(innings1.getRuns() + "-" + innings1.getWickets())
+        .score2(innings2.getRuns() + "-" + innings2.getWickets()).venue(match.getVenue()).build();
   }
 
   public ResponseEntity<?> getInnings(String id) {
@@ -225,11 +225,15 @@ public class MatchService {
   }
 
   public ResponseEntity<?> updatebatter(UpdateBatter updateBatter) {
+    System.out.println(updateBatter);
     Batter batter = batterRepo.findById(updateBatter.getId()).orElse(null);
     batter.setBalls(updateBatter.getBalls());
     batter.setFours(updateBatter.getFours());
     batter.setSixes(updateBatter.getSixes());
     batter.setRuns(updateBatter.getRuns());
+    batter.setStriker(updateBatter.isStriker());
+    batter.setOut(updateBatter.isOut());
+    batter.setBowledBy(updateBatter.getBowledBy());
     batterRepo.save(batter);
     return ResponseEntity.ok("success");
   }
@@ -238,7 +242,7 @@ public class MatchService {
     Innings innings = inningsRepo.findById(updateScore.getId()).orElse(null);
     if (innings != null) {
 
-      innings.setScore(updateScore.getScore());
+      innings.setRuns(updateScore.getScore());
       innings.setWickets(updateScore.getWickets());
       inningsRepo.save(innings);
     }
@@ -331,6 +335,7 @@ public class MatchService {
       batter.setBowledBy(bowler.getName());
       bowler.setWickets(bowler.getWickets() + 1);
       batter.setBalls(batter.getBalls() + 1);
+      bowler.setOvers(bowler.getOvers() + ((int) (bowler.getOvers() * 10) % 10 == 5 ? 0.5 : 0.1));
       batterRepo.save(batter);
       inningsRepo.save(innings);
       bowlerRepo.save(bowler);
