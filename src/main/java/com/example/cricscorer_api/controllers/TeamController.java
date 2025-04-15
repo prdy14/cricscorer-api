@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.cricscorer_api.dto.TeamRequest;
 import com.example.cricscorer_api.dto.TeamResponse;
 import com.example.cricscorer_api.dto.UpdateTeamRequest;
-import com.example.cricscorer_api.entity.Team;
+
 import com.example.cricscorer_api.services.TeamService;
 
 import org.springframework.beans.factory.annotation.Autowired;

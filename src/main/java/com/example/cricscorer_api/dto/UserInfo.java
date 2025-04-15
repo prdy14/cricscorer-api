@@ -15,6 +15,6 @@ public class UserInfo {
 
  public UserInfo(User user) {
   this.id = user.getUserId();
-  this.name = user.getUsername();
+  this.name = user.getName();
  }
 }

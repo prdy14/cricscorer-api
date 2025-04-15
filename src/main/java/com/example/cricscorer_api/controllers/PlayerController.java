@@ -1,24 +1,36 @@
 package com.example.cricscorer_api.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.cricscorer_api.entity.Player;
-import com.example.cricscorer_api.services.PlayerService;
+import com.example.cricscorer_api.dto.AddPlayerDto;
+import com.example.cricscorer_api.services.PlayerServices;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/player")
+@RequiredArgsConstructor
 public class PlayerController {
 
- @Autowired
- private PlayerService playerService;
+ private final PlayerServices playerServices;
 
- @GetMapping("/{id}")
- public Player getMethodName(@PathVariable("id") String id) {
-  return playerService.findPlayer(id);
+ @GetMapping("/getplayer")
+ public ResponseEntity<?> getPlayer(@RequestParam("email") String email) {
+  return playerServices.findByEmail(email);
+ }
+
+ @PostMapping("/addPlayer")
+ public ResponseEntity<?> postMethodName(@RequestBody AddPlayerDto addPlayerDto) {
+  return playerServices.addPlayer(addPlayerDto);
+
  }
 
 }

@@ -1,4 +1,4 @@
-package com.example.cricscorer_api.security;
+package com.example.cricscorer_api.services;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -12,21 +12,18 @@ import java.util.Date;
 import java.util.function.Function;
 
 @Component
-public class JwtUtils {
+public class JwtServices {
 
   @Value("${jwt.secret}")
   private String jwtSecret;
 
-  @Value("${jwt.expiration}")
-  private int jwtExpirationMs;
-
-  public String generateJwtToken(Authentication authentication) {
+  public String generateJwtToken(Authentication authentication, long time) {
     UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
 
     return Jwts.builder()
         .setSubject(userPrincipal.getUsername())
         .setIssuedAt(new Date())
-        .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+        .setExpiration(new Date((new Date()).getTime() + time))
         .signWith(getSigningKey(), SignatureAlgorithm.HS512)
         .compact();
   }
@@ -51,6 +48,15 @@ public class JwtUtils {
         .build()
         .parseClaimsJws(token)
         .getBody();
+  }
+
+  public boolean isValidToken(String jwt, UserDetails userDetails) {
+    final String username = extractUserName(jwt);
+    return username.equals(userDetails.getUsername()) && !isTokenExpired(jwt);
+  }
+
+  public boolean isTokenExpired(String jwt) {
+    return extractClaim(jwt, Claims::getExpiration).before(new Date());
   }
 
   public String extractUserName(String token) {
