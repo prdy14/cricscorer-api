@@ -36,7 +36,7 @@ public class SecurityConfig {
             .requestMatchers("/api/auth/**").permitAll()
             .requestMatchers("/api/player/**").authenticated()
             .requestMatchers("/api/teams/**").authenticated()
-            .requestMatchers("/api/matches/**").authenticated().requestMatchers("api/admin/**").hasAnyAuthority(
+            .requestMatchers("/api/matches/**").authenticated().requestMatchers("/api/admin/**").hasAnyAuthority(
                 "ADMIN"))
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
