@@ -48,7 +48,7 @@ public class SecurityConfig {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration
         .setAllowedOriginPatterns(Arrays.asList("http://localhost:5173",
-            "https://vite-project-one-roan.vercel.app/"));
+            "https://cricscore-1.vercel.app/"));
     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
     configuration.addAllowedHeader("*");
     configuration.setExposedHeaders(Arrays.asList("x-auth-token", "set-cookies"));
